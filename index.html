@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Okmus — Blade Throwing Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:#060612;color:#fff;font-family:'Inter',sans-serif;overflow-x:hidden}
+    .bg{position:fixed;inset:0;z-index:0}
+    .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(108,92,231,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(108,92,231,.07) 1px,transparent 1px);background-size:36px 36px}
+    .orb{position:absolute;border-radius:50%;pointer-events:none}
+    .orb1{width:700px;height:700px;top:-200px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(108,92,231,.20) 0%,transparent 65%)}
+    .orb2{width:400px;height:400px;bottom:100px;right:-100px;background:radial-gradient(circle,rgba(136,208,255,.10) 0%,transparent 65%)}
+    .particles{position:absolute;inset:0;overflow:hidden}
+    .particle{position:absolute;width:2px;height:2px;border-radius:50%;background:rgba(108,92,231,.8);animation:floatUp linear infinite}
+    @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:.7}100%{transform:translateY(-110vh) scale(0);opacity:0}}
+    .wrap{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:60px 24px 40px}
+    .logo{width:110px;height:110px;border-radius:26px;overflow:hidden;box-shadow:0 0 0 1.5px rgba(108,92,231,.5),0 0 50px rgba(108,92,231,.45);margin-bottom:28px;animation:pulseLogo 3s ease-in-out infinite}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    @keyframes pulseLogo{0%,100%{box-shadow:0 0 0 1.5px rgba(108,92,231,.5),0 0 50px rgba(108,92,231,.45)}50%{box-shadow:0 0 0 1.5px rgba(108,92,231,.9),0 0 80px rgba(108,92,231,.70)}}
+    .title{font-family:'Rajdhani',sans-serif;font-size:clamp(52px,10vw,80px);font-weight:700;letter-spacing:12px;background:linear-gradient(90deg,#b0a4ff,#ffffff,#88d0ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s ease-in-out infinite;line-height:1}
+    @keyframes shimmer{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
+    .tagline{color:rgba(170,170,255,.55);font-size:12px;letter-spacing:4px;text-transform:uppercase;margin:10px 0 32px}
+    .divider{display:flex;align-items:center;gap:14px;width:100%;max-width:360px;margin-bottom:32px}
+    .dline{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(108,92,231,.5),transparent)}
+    .ddiamond{color:rgba(108,92,231,.85);font-size:14px;animation:rotateDiamond 8s linear infinite}
+    @keyframes rotateDiamond{to{transform:rotate(360deg)}}
+    .desc{color:rgba(200,200,230,.70);font-size:16px;line-height:1.75;text-align:center;max-width:420px;margin-bottom:40px}
+    .badges{display:flex;gap:14px;margin-bottom:56px;flex-wrap:wrap;justify-content:center}
+    .badge{display:flex;align-items:center;gap:12px;padding:14px 24px;border-radius:14px;border:1px solid rgba(108,92,231,.4);background:rgba(108,92,231,.10);color:#fff;text-decoration:none;transition:all .25s}
+    .badge:hover{background:rgba(108,92,231,.22);border-color:rgba(108,92,231,.75);transform:translateY(-3px);box-shadow:0 8px 32px rgba(108,92,231,.25)}
+    .badge-icon{font-size:28px;line-height:1}
+    .badge-sub{display:block;font-size:10px;color:rgba(170,170,255,.55);letter-spacing:1px;margin-bottom:2px}
+    .badge-main{display:block;font-size:15px;font-weight:500}
+    .badge-soon{opacity:.45;pointer-events:none}
+    .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;width:100%;max-width:500px;margin-bottom:56px}
+    .feat{background:rgba(108,92,231,.07);border:1px solid rgba(108,92,231,.2);border-radius:14px;padding:20px 16px;text-align:center;transition:border-color .2s}
+    .feat:hover{border-color:rgba(108,92,231,.5)}
+    .feat-icon{font-size:28px;margin-bottom:10px;display:block}
+    .feat-title{font-size:13px;font-weight:500;color:rgba(220,220,255,.9);margin-bottom:4px}
+    .feat-desc{font-size:11px;color:rgba(170,170,255,.45);line-height:1.5}
+    .footer{border-top:1px solid rgba(108,92,231,.15);width:100%;max-width:500px;padding-top:24px;display:flex;justify-content:center;gap:28px;flex-wrap:wrap}
+    .footer a{color:rgba(170,170,255,.45);font-size:12px;text-decoration:none;letter-spacing:1px;transition:color .2s}
+    .footer a:hover{color:rgba(170,170,255,.9)}
+    .copy{color:rgba(120,120,160,.35);font-size:11px;margin-top:16px;text-align:center}
+  </style>
+</head>
+<body>
+<div class="bg">
+  <div class="grid"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="particles" id="particles"></div>
+</div>
+<div class="wrap">
+  <div class="logo"><img src="okmus.jpg" alt="Okmus"></div>
+  <h1 class="title">OKMUS</h1>
+  <p class="tagline">Archery · Blade · Mastery</p>
+  <div class="divider"><div class="dline"></div><span class="ddiamond">◈</span><div class="dline"></div></div>
+  <p class="desc">A precision blade-throwing game with 60 challenging levels. Tap to throw, hit the wheel, fill every slot — and advance to the next level.</p>
+  <div class="badges">
+    <a class="badge" href="#" id="ios-btn">
+      <span class="badge-icon"></span>
+      <span><span class="badge-sub">Download on the</span><span class="badge-main">App Store</span></span>
+    </a>
+    <a class="badge badge-soon" href="#">
+      <span class="badge-icon">▶</span>
+      <span><span class="badge-sub">Coming soon on</span><span class="badge-main">Google Play</span></span>
+    </a>
+  </div>
+  <div class="features">
+    <div class="feat"><span class="feat-icon">🎯</span><div class="feat-title">60 Levels</div><div class="feat-desc">Beginner to Legend</div></div>
+    <div class="feat"><span class="feat-icon">🌍</span><div class="feat-title">10 Languages</div><div class="feat-desc">Play in your language</div></div>
+    <div class="feat"><span class="feat-icon">⚡</span><div class="feat-title">One Tap</div><div class="feat-desc">Simple but deep</div></div>
+  </div>
+  <div class="footer">
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="mailto:yavuzselimokms@gmail.com">Contact</a>
+  </div>
+  <p class="copy">© 2025 Talha Cosar. All rights reserved.</p>
+</div>
+<script>
+const pc=document.getElementById('particles');
+for(let i=0;i<24;i++){const p=document.createElement('div');p.className='particle';p.style.cssText='left:'+Math.random()*100+'%;bottom:'+Math.random()*15+'%;animation-duration:'+(5+Math.random()*8)+'s;animation-delay:'+Math.random()*6+'s;opacity:'+(0.25+Math.random()*0.55);pc.appendChild(p)}
+</script>
+</body>
+</html>
